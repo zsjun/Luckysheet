@@ -169,8 +169,10 @@ luckysheet.create = function(setting) {
   Store.loadingObj = loadingObj;
 
   if (loadurl == "") {
+    // 用来渲染
     sheetmanage.initialjfFile(menu, title);
     // luckysheetsizeauto();
+    // 初始化事件操作
     initialWorkBook();
   } else {
     $.post(loadurl, { gridKey: server.gridKey }, function(d) {
