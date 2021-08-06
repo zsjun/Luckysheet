@@ -1410,9 +1410,15 @@ const luckysheetformula = {
         opacity: "0.13",
       });
   },
+  // 当通过普通的点击编辑之后，再点击其他单元格的时候，在这里更新
+  // r 是上次更新的行的坐标
+  // c 是上次更新的列的坐标
+  // value 为空
+  // isRefresh 默认为true，也就是说默认会刷新，
+  // 这里主要的作用就是通过获取r和c此单元格的值，用来更新Store.flowData，
+  // 然后调用jfrefreshgrid
   updatecell: function(r, c, value, isRefresh = true) {
     let _this = this;
-
     let $input = $("#luckysheet-rich-text-editor");
     let inputText = $input.text(),
       inputHtml = $input.html();
@@ -1428,7 +1434,7 @@ const luckysheetformula = {
       return;
     }
 
-    //数据验证 输入数据无效时禁止输入
+    // 数据验证 输入数据无效时禁止输入
     if (dataVerificationCtrl.dataVerification != null) {
       let dvItem = dataVerificationCtrl.dataVerification[r + "_" + c];
 
@@ -1542,6 +1548,7 @@ const luckysheetformula = {
         curv.ct.fa != "@" &&
         !isRealNull(value)
       ) {
+        // m 表示时间处理
         delete curv.m; //更新时间m处理 ， 会实际删除单元格数据的参数（flowdata时已删除）
         if (curv.f != null) {
           //如果原来是公式，而更新的数据不是公式，则把公式删除
@@ -1554,7 +1561,7 @@ const luckysheetformula = {
     window.luckysheet_getcelldata_cache = null;
 
     let isRunExecFunction = true;
-
+    // 复制旧的二维数组对象，防止到处更改
     let d = editor.deepCopyFlowData(Store.flowdata);
     let dynamicArrayItem = null; //动态数组
 
@@ -1768,6 +1775,7 @@ const luckysheetformula = {
     }
 
     // value maybe an object
+    // 设置rc的值是value
     setcellvalue(r, c, d, value);
     _this.cancelNormalSelected();
 
@@ -1866,6 +1874,7 @@ const luckysheetformula = {
       };
     }
 
+    // 这里执行cellUpdated
     setTimeout(() => {
       // Hook function
       method.createHookFunction(
@@ -1885,6 +1894,7 @@ const luckysheetformula = {
         allParam,
         isRunExecFunction
       );
+
       // Store.luckysheetCellUpdate.length = 0; //clear array
       _this.execFunctionGlobalData = null; //销毁
     } else {
@@ -5880,7 +5890,7 @@ const luckysheetformula = {
     }
 
     if (value != null) {
-      //此处setcellvalue 中this.execFunctionGroupData会保存想要更新的值，本函数结尾不要设为null,以备后续函数使用
+      // 此处setcellvalue 中this.execFunctionGroupData会保存想要更新的值，本函数结尾不要设为null,以备后续函数使用
       // setcellvalue(origin_r, origin_c, _this.execFunctionGroupData, value);
       let cellCache = [[{ v: null }]];
       setcellvalue(0, 0, cellCache, value);

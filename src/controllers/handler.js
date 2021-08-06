@@ -294,7 +294,7 @@ export default function luckysheetHandler() {
       if ($(event.target).hasClass("luckysheet-mousedown-cancel")) {
         return;
       }
-      //  console.log(124, Store.flowdata);
+
       // 协同编辑其他用户不在操作的时候，用户名框隐藏
       hideUsername();
 
@@ -371,6 +371,7 @@ export default function luckysheetHandler() {
         row_index,
         col_index
       );
+
       if (!!margeset) {
         row = margeset.row[1];
         row_pre = margeset.row[0];
@@ -384,6 +385,7 @@ export default function luckysheetHandler() {
       }
 
       //单元格单击之前
+
       if (
         !method.createHookFunction(
           "cellMousedownBefore",
@@ -666,7 +668,6 @@ export default function luckysheetHandler() {
           }
 
           formula.rangeSetValue({ row: rowseleted, column: columnseleted });
-
           formula.rangestart = true;
           formula.rangedrag_column_start = false;
           formula.rangedrag_row_start = false;
@@ -712,6 +713,9 @@ export default function luckysheetHandler() {
           }, 1);
           return;
         } else {
+          // 上次更新的会在这里把数据写到Store.flowData，
+          // Store.luckysheetCellUpdate[0],表示上次更新的行号，
+          // Store.luckysheetCellUpdate[1]表示上次更新的列号
           formula.updatecell(
             Store.luckysheetCellUpdate[0],
             Store.luckysheetCellUpdate[1]
